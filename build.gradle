@@ -1,0 +1,26 @@
+plugins {
+	id 'java'
+}
+
+group = 'helloWorld'
+version = '0.1'
+sourceCompatibility = '17'
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+
+	// Json 설정
+	implementation 'org.apache.commons:commons-lang3:3.0'
+	
+	implementation 'org.json:json:20211205'
+	implementation 'com.fasterxml.jackson.core:jackson-databind:2.0.1'
+	
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+	enabled = false
+}
