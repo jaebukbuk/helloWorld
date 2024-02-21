@@ -18,6 +18,11 @@ dependencies {
 	implementation 'org.json:json:20211205'
 	implementation 'com.fasterxml.jackson.core:jackson-databind:2.0.1'
 	
+	// https://mvnrepository.com/artifact/org.apache.poi/poi
+	implementation 'org.apache.poi:poi:3.9'
+	// https://mvnrepository.com/artifact/org.apache.poi/poi-ooxml
+	implementation 'org.apache.poi:poi-ooxml:5.2.5'
+	
 }
 
 tasks.named('test') {
