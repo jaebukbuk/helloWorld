@@ -772,7 +772,7 @@ public class MakeJsonToText {
             
             System.out.println("변환 JSON 입니다.");
             System.out.println( resultJSON.toString() );
-            System.out.println("깃 테스트스 입니다.");
+            System.out.println("깃 테스트스 입니다aa.");
             searchForEntity4( rawJson.toString() );
         }
     }
