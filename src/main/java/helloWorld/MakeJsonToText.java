@@ -729,6 +729,112 @@ public class MakeJsonToText {
         }
     }
     
+    
+    /**********************************************************************************************************************************/
+    // searchForEntity5
+    /**********************************************************************************************************************************/
+    
+    public static void searchForEntity5(String node) {
+        
+        int idx = 0;
+        
+        try {
+            
+            try {
+                
+                JSONObject resultJSON = new JSONObject( node.toString() );
+                dfsJsonObject5(resultJSON , idx);
+                
+            } catch (Exception e){
+
+                JSONArray resultJSON = new JSONArray( node.toString() );
+                dfsJsonArray5(resultJSON , idx);
+            }
+            
+        } catch (Exception e) {
+            System.out.println("오류야");
+        }
+    }
+    
+    public static void dfsJsonObject5(JSONObject node, int idx) {
+       
+        String[] namesArr = JSONObject.getNames(node);
+        
+        for(int i = 0 ; i < namesArr.length ; i++ ) {
+            
+            if( node.get(namesArr[i].toString()) instanceof JSONArray) { 
+                
+                
+                for(int l = 0 ; l < idx+1 ; l++) {
+                    System.out.printf("-");
+                }
+                System.out.println( namesArr[i].toString() + " [" ); 
+                dfsJsonArray5(  (JSONArray)  node.get(namesArr[i].toString()) , idx+1 ); 
+                
+                for(int l = 0 ; l < idx+1 ; l++) {
+                    System.out.printf("-");
+                }
+                
+                System.out.println("]");
+            } else if( node.get(namesArr[i].toString()) instanceof JSONObject) { 
+                
+                for(int l = 0 ; l < idx+1 ; l++) {
+                    System.out.printf("-");
+                }
+                System.out.println(namesArr[i].toString() + "{"); 
+                dfsJsonObject5( (JSONObject) node.get(namesArr[i].toString()) , idx+1 ); 
+                
+                for(int l = 0 ; l < idx+1 ; l++) {
+                    System.out.printf("-");
+                }
+                
+                System.out.println("}");
+                
+            } else {
+                
+                for(int l = 0 ; l < idx+1 ; l++) {
+                    System.out.printf("-");
+                }
+                System.out.printf("%s \n", namesArr[i].toString());
+            }
+        }
+    }
+    
+    public static void dfsJsonArray5(JSONArray node, int idx) {
+        
+        for(int k = 0 ; k < node.length() ; k++ ) {
+            
+            if( node.get(k)      instanceof JSONArray)  { 
+                
+                
+                dfsJsonArray5(  (JSONArray)  node.get(k), idx+1 ); 
+                
+            } else if( node.get(k) instanceof JSONObject) { 
+                
+                for(int l = 0 ; l < idx+1 ; l++) {
+                    System.out.printf("-");
+                }
+                
+                System.out.println("{"); 
+                dfsJsonObject5( (JSONObject) node.get(k), idx+1 ); 
+                
+                for(int l = 0 ; l < idx+1 ; l++) {
+                    System.out.printf("-");
+                }
+                
+                System.out.println("}");
+            
+            
+            } else {
+                
+                for(int l = 0 ; l < idx+1 ; l++) {
+                    System.out.printf("-");
+                }
+                System.out.printf("[] \n");
+            }
+        }
+    }
+    
     /**********************************************************************************************************************************/
     /**
      * @Description : 
@@ -773,7 +879,7 @@ public class MakeJsonToText {
             System.out.println("변환 JSON 입니다.");
             System.out.println( resultJSON.toString() );
             System.out.println("깃 테스트스 입니다aa.");
-            searchForEntity4( rawJson.toString() );
+            searchForEntity5( rawJson.toString() );
         }
     }
 }
