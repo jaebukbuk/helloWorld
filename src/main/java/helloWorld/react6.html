@@ -1,0 +1,130 @@
+<!-- 
+	Hook Flow 이해하기! - Hook 의 라이프사이클 
+	
+	미션1 - 버튼 누르면 인푿 나오게 
+	미션2 - 인풑에 쓰면 밑에 나오게 
+	
+	
+	==> 깊이 우선으로 이펙트가 발생한다!!!!!!!!
+	
+	===> 클림업~~~
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+	<body>
+		<div id = "root"> </div>
+		<script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+		<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+		<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+		<script type = "text/babel">
+			
+			console.log("Script Render Start");
+			
+			const rootElement = document.getElementById("root");
+	 	
+	 		// 대문자로 작성해야해
+	 		const Child = () => {
+		
+				console.log("		Child Render Start");
+				
+				const [text, setText] = React.useState(()=>{
+					console.log(		"Child useSate");
+					return "";
+				});
+				
+				function handleChange(event){
+					setText(event.target.value);
+				};
+				
+				// 사이드 이펙트 
+				React.useEffect(()=>{
+					console.log("		Child useEffect - All - no deps");
+					
+					return () => {
+						console.log("		Child useEffect [CleanUP] - All - no deps");
+					}
+				}); //계속
+				
+				React.useEffect(()=>{
+					console.log("		Child useEffect - None - empty deps");
+					
+					return () => {
+						console.log("		Child useEffect [CleanUP] - None - empty deps");
+					}
+				},[]); //처음에만
+				
+				React.useEffect(()=>{
+					console.log("		Child useEffect - show - show deps");
+					
+					return () => {
+						console.log("		Child useEffect [CleanUP] - show - show deps");
+					}
+				},[text]);
+				
+				const element = (
+					<>
+						<input onChange={handleChange}/>
+						<p>{text}</p>
+					</>
+				)
+				
+				console.log("		Child Render end");
+				return element;
+			};
+			
+			const App = () => {
+				
+				console.log("App Render Start");
+				
+				const [show, setShow] = React.useState(() =>{
+					console.log("App useState - show");
+					return false;
+				});
+				
+ 				function showInput() {
+					setShow((prev) => !prev); // prev 를 통해 이전 값 가능하다.
+				};
+				
+				// 사이드 이펙트 
+				React.useEffect(()=>{
+					console.log("App useEffect - All - no deps");
+				});
+				React.useEffect(()=>{
+					console.log("App useEffect - None - empty deps");
+				},[]);
+				React.useEffect(()=>{
+					console.log("App useEffect - show - show deps");
+				},[show]);
+				
+				console.log("App Render End");
+				
+				return (
+					<>
+					 <button onClick={showInput}> search </button>
+						{show ? <Child /> : null}
+
+					</>
+				)
+			};
+			
+			ReactDOM.render(<App />,rootElement);
+			console.log("Script Render End");
+				
+		</script>
+	</body>
+</html>
+
+
+
+
+/*
+ *
+	컴포넌트 
+	앨리먼트
+	useStae
+	lazy initialize => React.useState
+	hook flow 훅들의 호출 타이밍
+	 
+	
+*/

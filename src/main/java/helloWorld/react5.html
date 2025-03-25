@@ -1,0 +1,64 @@
+<!-- 
+	Hook Flow 이해하기! - Hook 의 라이프사이클 
+	
+	미션1 - 버튼 누르면 인푿 나오게 
+	미션2 - 인풑에 쓰면 밑에 나오게 
+	
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+	<body>
+		<div id = "root"> </div>
+		<script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+		<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+		<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+		<script type = "text/babel">
+			
+			console.log("Script Render Start");
+			
+			const rootElement = document.getElementById("root");
+	 
+			const App = () => {
+				
+				console.log("App Render Start");
+				
+				const [show, setShow] = React.useState(() =>{
+					console.log("App useState - show");
+					return false;
+				});
+				
+ 				function showInput() {
+					setShow((prev) => !prev); // prev 를 통해 이전 값 가능하다.
+				};
+				
+				// 사이드 이펙트 
+				React.useEffect(()=>{
+					console.log("App useEffect - All - no deps");
+				});
+				React.useEffect(()=>{
+					console.log("App useEffect - None - empty deps");
+				},[]);
+				React.useEffect(()=>{
+					console.log("App useEffect - show - show deps");
+				},[show]);
+				
+				console.log("App Render End");
+				
+				return (
+					<>
+					 <button onClick={showInput}> search </button>
+					 
+					 { show ? <input /> : null }
+					 			
+					</>
+				)
+			};
+			
+			ReactDOM.render(<App />,rootElement);
+			console.log("Script Render End");
+				
+		</script>
+	</body>
+</html>
+

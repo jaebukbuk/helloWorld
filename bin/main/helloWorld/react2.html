@@ -1,0 +1,63 @@
+<!-- 
+	컴포넌트 상태 관리!
+	
+	DOM - 논리 트리
+	컴포넌트 - 앨리먼트의 집합
+	앨리먼트 - 요소 -> 컴포넌트의 구성 요소 
+
+	'리엑트 제공하는 상태 관리 '
+	
+	useState -> 상태값을 관리해주는 훅
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+	<body>
+	
+		<div id = "root"> </div>
+		
+		<script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+		<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+		<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+		
+		<script type = "text/babel">
+			
+			const rootElement = document.getElementById("root");
+			
+			/* APP 은 컴포넌트로 볼수 있음 */
+			const App = () => {
+
+				/*  const [keyword, setKeyword] = React.useState("keyword"); 배열 리턴 */
+				const keywordState = React.useState("keyword");
+				const keyword = keywordState[0];
+				const setKeyword = keywordState[1];
+				const [result, setResult] = React.useState("rst");
+				const [typing, setTyping] = React.useState(false);
+							
+				function handleChange(event) {
+					setKeyword(event.target.value);
+					setTyping(true);
+				}
+			
+				function handleClick(){
+					setResult(`result is ${keyword}`);
+					setTyping(false);
+				} 
+			
+				return (
+					<>
+					 <input onChange={handleChange}/>					
+					 <button onClick={handleClick}>search</button>
+					 <p>
+						{typing ? `typing is true ${keyword} ` : result}
+					 </p>					
+					</>
+				)
+			};
+			
+			ReactDOM.render(<App />,rootElement);	
+	 
+		</script>
+	</body>
+</html>
+

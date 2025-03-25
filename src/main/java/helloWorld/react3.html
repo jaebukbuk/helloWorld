@@ -1,0 +1,93 @@
+<!-- 
+	
+	컴포넌트 사이트 이펙트 => useEffect ==> 부수효과를 내주는 훅
+	
+	훅 -> use 뭐시기	
+	useState -> 상태값을 관리해주는 훅 ==> lazy initialize
+	
+	값을 저장 => 로컬 스토리지 window.localStorage - 딜레이 있을수 있다.
+	window.localStorage.setItem("keyword", event.target.value);
+	디펜더시 안준다 ==> 모든
+	빈 배열 ==> 처음에만
+	
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+	<body>
+	
+		<div id = "root"> </div>
+		
+		<script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+		<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+		<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+		
+		<script type = "text/babel">
+			
+			const rootElement = document.getElementById("root");
+			
+				
+			console.log('body');
+			/* APP 은 컴포넌트로 볼수 있음 */
+			const App = () => {
+
+				/*  const [keyword, setKeyword] = React.useState("keyword"); 배열 리턴 */
+				const [keyword, setKeyword] = React.useState(
+					() => {
+						 
+						return window.localStorage.getItem("keyword");
+					}					
+				); /*해당 const의 범위는 이 함수 내*/
+				const [result, setResult]   = React.useState("rst");
+				const [typing, setTyping]   = React.useState(false);
+				const aa = '';
+				console.log('app');
+				
+				//chg 할때마다 ==> 키워드가 바뀔때마다 로컬스토리지에 넣고 있다. => useEffect
+				function handleChange(event) {
+					console.log('handleChange');
+					//window.localStorage.setItem("keyword", event.target.value);
+					setKeyword(event.target.value);
+					setTyping(true);
+				}
+				
+//				React.useEffect(() => { 
+//					console.log('useEffect');
+//					window.localStorage.setItem("keyword", event.target.value);
+//				}); // ==> 이렇게 파라메터 없으면 모든 컴퍼넌트 변경시마다.
+				
+//				React.useEffect(() => { 
+//					console.log('useEffect');
+//					window.localStorage.setItem("keyword", keyword);
+//				},[keyword]); 
+				
+				React.useEffect(() => { 
+					console.log('useEffect');
+					window.localStorage.setItem("keyword", result);
+				},[result, keyword]); // 이건 왜 안돼지.?  됀다.
+				
+				function handleClick(){
+					console.log('handleClick');
+					alert(result);
+					setResult(`result is ${keyword}`);
+					alert(result);
+					setTyping(false);
+				} 
+			
+				return (
+					<>
+					 <input onChange={handleChange} value = {keyword}/>					
+					 <button onClick={handleClick}>search</button>
+					 <p>
+						{typing ? `typing is true ${keyword} ` : result}
+					 </p>					
+					</>
+				)
+			};
+			
+			ReactDOM.render(<App />,rootElement);	
+	 
+		</script>
+	</body>
+</html>
+

@@ -1,0 +1,58 @@
+<!-- 
+	리액트 Element에 스타일 입히기
+	class 명 아니구 다른 방법두 있다.
+	
+	w3schools.com
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+	<body>
+		<div id = "root"> </div>
+		<script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+		<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+		<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+		
+		<style>
+			.button {
+			  background-color: #04AA6D; /* Green */
+			  border: none;
+			  color: white;
+			  padding: 15px 32px;
+			  text-align: center;
+			  text-decoration: none;
+			  display: inline-block;
+			  font-size: 16px;
+			  margin: 4px 2px;
+			  cursor: pointer;
+			}
+			
+			.Blue  {background-color: #008CBA;} /* Blue */
+			.Red   {background-color: #f44336;} /* Red */ 
+			.Gray  {background-color: #e7e7e7; color: black;} /* Gray */ 
+			.Black {background-color: #555555;} /* Black */
+		</style>
+				
+		<script type = "text/babel">
+			
+			console.log("Script Render Start");
+			
+			const rootElement = document.getElementById("root");
+	 	
+ 			const elements = (
+				<>
+					<button className = "button" style={{ borderRadius : "50%"}}> Green   </button>
+					<button className = "button Blue"> Blue   </button>
+					<button className = "button Red"> Red    </button>
+					<button className = "button Gray"> Gray   </button>
+					<button className = "button Black"> Black  </button> 
+				</>
+			);
+			
+			ReactDOM.render(elements,rootElement);
+			console.log("Script Render End");
+				
+		</script>
+	</body>
+</html>
+ 

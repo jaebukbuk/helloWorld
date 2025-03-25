@@ -11,22 +11,17 @@ package helloWorld;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.security.GeneralSecurityException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.TimeZone;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
-import org.apache.commons.codec.binary.Hex;
+import org.apache.commons.codec.binary.Base64;
 import org.json.JSONObject;
 
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import org.apache.commons.codec.binary.Base64;
 /**
  * @ClassName    : MainClass
  * @Description  : 
@@ -43,9 +38,30 @@ public class MainClass {
     public static void main(String[] args) {
         
         try {
+
+        	
+        	System.out.println("지마켓 : 개발 : 일반웹 토큰 -> Bearer "+ generate(AucGmrkAccount.GMRKNOMAL));
+        	System.out.println("옥션   : 개발 : 일반웹 토큰 -> Bearer "+ generate(AucGmrkAccount.AUCNOMAL));
+            System.out.println("지마켓 : 운영 : 일반웹 토큰 -> Bearer "+ generate(AucGmrkAccount.REAL_GMRKNOMAL));
+            System.out.println("옥션   : 운영 : 일반웹 토큰 -> Bearer "+ generate(AucGmrkAccount.REAL_AUCNOMAL));
             
-        	String asd = generate(AucGmrkAccount.AUCHOMESHOP);
-            System.out.println(asd);
+            
+            System.out.println("지마켓 : 개발 : 백화점 토큰 -> Bearer "+ generate(AucGmrkAccount.GMRKDEPART));
+            System.out.println("옥션   : 개발 : 백화점 토큰 -> Bearer "+ generate(AucGmrkAccount.AUCDEPART));
+            System.out.println("지마켓 : 운영 : 백화점 토큰 -> Bearer "+ generate(AucGmrkAccount.REAL_GMRKDEPART));
+            System.out.println("옥션   : 운영 : 백화점 토큰 -> Bearer "+ generate(AucGmrkAccount.REAL_AUCDEPART));
+            
+            System.out.println("지마켓 : 개발 : 홈쇼핑 토큰 -> Bearer "+ generate(AucGmrkAccount.GMRKHOMESHOP));
+            System.out.println("옥션   : 개발 : 홈쇼핑 토큰 -> Bearer "+ generate(AucGmrkAccount.AUCHOMESHOP));
+            System.out.println("지마켓 : 운영 : 홈쇼핑 토큰 -> Bearer "+ generate(AucGmrkAccount.REAL_GMRKHOMESHOP));
+            System.out.println("옥션   : 운영 : 홈쇼핑 토큰 -> Bearer "+ generate(AucGmrkAccount.REAL_AUCHOMESHOP));
+            
+            System.out.println("지마켓 : 개발 : 티켓   토큰 -> Bearer "+ generate(AucGmrkAccount.GMRKTIKET));
+            System.out.println("옥션   : 개발 : 티켓   토큰 -> Bearer "+ generate(AucGmrkAccount.AUCTIKET));
+            System.out.println("지마켓 : 운영 : 티켓   토큰 -> Bearer "+ generate(AucGmrkAccount.REAL_GMRKTIKET));
+            System.out.println("옥션   : 운영 : 티켓   토큰 -> Bearer "+ generate(AucGmrkAccount.REAL_AUCTIKET));
+            
+            
         } catch (Exception e) {
             
             e.printStackTrace();
@@ -66,10 +82,11 @@ public class MainClass {
     		
             Calendar calDate = Calendar.getInstance();
             calDate.setTime ( new Date()          );
-            calDate.add     ( Calendar.MINUTE , 2 );   
+            calDate.add     ( Calendar.HOUR , 4 );              // 여거 4시간으로 우선 해놨어여 
             
             long expMillies =  ( (Date)calDate.getTime() ).getTime()  / 1000;
-            System.out.println( "만료시간 : " +  calDate.getTime() );
+            
+            //System.out.println( "만료시간 : " +  calDate.getTime() );
             
             //System.out.println( calDate.getTime()  );
             //dateFormatGmt.format(calDate.getTime());
@@ -82,11 +99,34 @@ public class MainClass {
             tokenPayload.put("iss", PAYLOAD_ISS);
             tokenPayload.put("sub", PAYLOAD_SUB);
             tokenPayload.put("aud", PAYLOAD_AUD);
-            tokenPayload.put("exp", expMillies);         
-            //tokenPayload.put("iat", prtMillies);        
-            
+            //tokenPayload.put("exp", expMillies);                    // 요거 주석 처리하면 만료시간 없어여!!!!!!!!!!
+            //tokenPayload.put("iat", calDate.getTime() );        
             switch ( aucGmrkAccount ) {
             
+         	case AUCTIKET -> {
+        		tokenHeader.put("kid", HEADER_KID_PREFIX + AucGmrkAccount.AUCTIKET.getMasterId() );
+            	tokenPayload.put("ssi", "A:"+AucGmrkAccount.AUCTIKET.getSellerId() );
+            	SECRET_KEY = AucGmrkAccount.AUCTIKET.getSecretKey();
+        	} 
+         	
+         	case GMRKTIKET -> {
+        		tokenHeader.put("kid", HEADER_KID_PREFIX + AucGmrkAccount.GMRKTIKET.getMasterId() );
+            	tokenPayload.put("ssi", "G:"+AucGmrkAccount.GMRKTIKET.getSellerId() );
+            	SECRET_KEY = AucGmrkAccount.GMRKTIKET.getSecretKey();
+        	} 
+         	
+         	case REAL_AUCTIKET -> {
+        		tokenHeader.put("kid", HEADER_KID_PREFIX + AucGmrkAccount.REAL_AUCTIKET.getMasterId() );
+            	tokenPayload.put("ssi", "A:"+AucGmrkAccount.REAL_AUCTIKET.getSellerId() );
+            	SECRET_KEY = AucGmrkAccount.REAL_AUCTIKET.getSecretKey();
+        	} 
+         	
+         	case REAL_GMRKTIKET -> {
+        		tokenHeader.put("kid", HEADER_KID_PREFIX + AucGmrkAccount.REAL_GMRKTIKET.getMasterId() );
+            	tokenPayload.put("ssi", "G:"+AucGmrkAccount.REAL_GMRKTIKET.getSellerId() );
+            	SECRET_KEY = AucGmrkAccount.REAL_GMRKTIKET.getSecretKey();
+        	} 
+            	///개발
             	case AUCNOMAL -> {
             		tokenHeader.put("kid", AucGmrkAccount.AUCNOMAL.getMasterId() );
                 	tokenPayload.put("ssi", "A:"+AucGmrkAccount.AUCNOMAL.getSellerId() );
@@ -105,10 +145,11 @@ public class MainClass {
                 	SECRET_KEY = AucGmrkAccount.AUCHOMESHOP.getSecretKey();
             	}
               	
-//              	case "지마켓일반웹" -> {
-//            		tokenHeader.put("kid", HEADER_KID_PREFIX + AucGmrkAccount.AUCNOMAL.getMasterId() );
-//                	tokenPayload.put("ssi", "G:"+AucGmrkAccount.AUCNOMAL.getSellerId() );
-//            	}
+              	case GMRKNOMAL -> {
+            		tokenHeader.put("kid", HEADER_KID_PREFIX + AucGmrkAccount.GMRKNOMAL.getMasterId() );
+                	tokenPayload.put("ssi", "G:"+AucGmrkAccount.GMRKNOMAL.getSellerId() );
+                	SECRET_KEY = AucGmrkAccount.GMRKNOMAL.getSecretKey();
+            	}
               	
               	case GMRKDEPART -> {
             		tokenHeader.put("kid", HEADER_KID_PREFIX + AucGmrkAccount.GMRKDEPART.getMasterId() );
@@ -122,10 +163,43 @@ public class MainClass {
                 	SECRET_KEY = AucGmrkAccount.GMRKHOMESHOP.getSecretKey();
             	}
               	
-              	case AUCREAL -> {
-            		tokenHeader.put("kid", HEADER_KID_PREFIX + AucGmrkAccount.AUCREAL.getMasterId() );
-                	tokenPayload.put("ssi", "G:"+AucGmrkAccount.AUCREAL.getSellerId() );
-                	SECRET_KEY = AucGmrkAccount.AUCREAL.getSecretKey();
+              	
+              	/**운영******////
+              	
+              	case REAL_AUCNOMAL -> {
+            		tokenHeader.put("kid", HEADER_KID_PREFIX + AucGmrkAccount.REAL_AUCNOMAL.getMasterId() );
+                	tokenPayload.put("ssi", "A:"+AucGmrkAccount.REAL_AUCNOMAL.getSellerId() );
+                	SECRET_KEY = AucGmrkAccount.REAL_AUCNOMAL.getSecretKey();
+            	}
+              	
+              	case REAL_AUCDEPART -> {
+            		tokenHeader.put("kid", HEADER_KID_PREFIX + AucGmrkAccount.REAL_AUCDEPART.getMasterId() );
+                	tokenPayload.put("ssi", "A:"+AucGmrkAccount.REAL_AUCDEPART.getSellerId() );
+                	SECRET_KEY = AucGmrkAccount.REAL_AUCDEPART.getSecretKey();
+            	}
+              	
+              	case REAL_AUCHOMESHOP -> {
+            		tokenHeader.put("kid", HEADER_KID_PREFIX + AucGmrkAccount.REAL_AUCHOMESHOP.getMasterId() );
+                	tokenPayload.put("ssi", "A:"+AucGmrkAccount.REAL_AUCHOMESHOP.getSellerId() );
+                	SECRET_KEY = AucGmrkAccount.REAL_AUCHOMESHOP.getSecretKey();
+            	}
+              	
+              	case REAL_GMRKNOMAL -> {
+            		tokenHeader.put("kid", HEADER_KID_PREFIX + AucGmrkAccount.REAL_GMRKNOMAL.getMasterId() );
+                	tokenPayload.put("ssi", "G:"+AucGmrkAccount.REAL_GMRKNOMAL.getSellerId() );
+                	SECRET_KEY = AucGmrkAccount.REAL_GMRKNOMAL.getSecretKey();
+            	}
+              	
+              	case REAL_GMRKDEPART -> {
+            		tokenHeader.put("kid", HEADER_KID_PREFIX + AucGmrkAccount.REAL_GMRKDEPART.getMasterId() );
+                	tokenPayload.put("ssi", "G:"+AucGmrkAccount.REAL_GMRKDEPART.getSellerId() );
+                	SECRET_KEY = AucGmrkAccount.REAL_GMRKDEPART.getSecretKey();
+            	}
+              	
+              	case REAL_GMRKHOMESHOP -> {
+            		tokenHeader.put("kid", HEADER_KID_PREFIX + AucGmrkAccount.REAL_GMRKHOMESHOP.getMasterId() );
+                	tokenPayload.put("ssi", "G:"+AucGmrkAccount.REAL_GMRKHOMESHOP.getSellerId() );
+                	SECRET_KEY = AucGmrkAccount.REAL_GMRKHOMESHOP.getSecretKey();
             	}
               	
               	default -> {
@@ -133,16 +207,16 @@ public class MainClass {
               	}
             }
             
-            System.out.println("tokenHeader.toString()   : " + tokenHeader.toString() );
-            System.out.println("tokenPayload.toString()  : " + tokenPayload.toString());
+            //System.out.println("tokenHeader.toString()   : " + tokenHeader.toString() );
+            //System.out.println("tokenPayload.toString()  : " + tokenPayload.toString());
            
             String encodedHeader  =  new String( Base64.encodeBase64URLSafe( tokenHeader.toString().getBytes(Charset.forName("UTF-8"))  ) );
             String encodedPayload =  new String( Base64.encodeBase64URLSafe( tokenPayload.toString().getBytes(Charset.forName("UTF-8")) ) );
 
             String signature = "";
             
-            System.out.println(" encodedHeader  : " + encodedHeader);
-            System.out.println(" encodedPayload : " + encodedPayload);
+            //System.out.println(" encodedHeader  : " + encodedHeader);
+            //System.out.println(" encodedPayload : " + encodedPayload);
             
             try {
 
@@ -151,7 +225,7 @@ public class MainClass {
                 byte[] hash = hasher.doFinal( (encodedHeader+"."+encodedPayload).toString().getBytes(Charset.forName("UTF-8")) );
                 signature = new String(Base64.encodeBase64URLSafe(hash));
                 
-                System.out.println("signature : " + signature );
+                //System.out.println("signature : " + signature );
                 
             } catch (GeneralSecurityException var14) {
             	
@@ -162,18 +236,31 @@ public class MainClass {
     }
     
     public enum AucGmrkAccount {
-    	
-	  	    AUCNOMAL     ( "hmall01t"    ,  "옥션일반웹"    ,    "hmall01"    ,  "" )
-	      , AUCDEPART    ( "hdepart01t"  ,  "옥션백화점"    ,    "hdepart01"  ,  "" )
-	      , AUCHOMESHOP  ( "hhome01t"    ,  "옥션홈쇼핑"    ,    "hhome01"    ,  "" )
-	                                                                          
-	      , GMRKNOMAL    ( "hmall01t"    ,  "지마켓일반웹"  ,    "hmall00"    ,  "")
-	      , GMRKDEPART   ( "hdepart01t"  ,  "지마켓백화점"  ,    "hdepart01"  ,  "" )
-	      , GMRKHOMESHOP ( "hhome01t"    ,  "지마켓홈쇼핑"  ,    "hhome01"    ,  "" )
-	                                                                          
-	      , AUCREAL      ( "hhome01"     ,  "옥션운영"      ,    "hhome01"    ,  "" )
-	      ;
+    																												  // 개발  // 운영	
+    	    GMRKNOMAL         ( "hmall01t"    ,  "지마켓일반웹"   ,    "hmall00"    ,  " " )   // G     // N
+    	  , AUCNOMAL          ( "hmall01t"    ,  "옥션일반웹"     ,    "hmall01"    ,  " " )   // N     // N
+	  	  , REAL_GMRKNOMAL    ( "hmall01"     ,  "지마켓일반웹"   ,    "hmall01"    ,  " " )   // N     // N
+	  	  , REAL_AUCNOMAL     ( "hmall01"     ,  "옥션일반웹"     ,    "hmall01"    ,  " " )   // N     // N
+                                                                                         
+	  	  , GMRKTIKET         ( "hhome01trt"  ,  "지마켓무형"     ,    "hhome01tr"  ,  " " )   // N     // T
+	      , AUCTIKET          ( "hhome01trt"  ,  "옥션무형"       ,    "hhome01tr"  ,  " " )   // N     // T
+	      , REAL_GMRKTIKET    ( "hhome01tr"   ,  "지마켓무형"     ,    "hhome01tr"  ,  " " )   // N     // T
+	      , REAL_AUCTIKET     ( "hhome01tr"   ,  "옥션무형"       ,    "hhome01tr"  ,  " " )   // N     // T
+	                                                                                     
+	  	  , GMRKDEPART        ( "hdepart01t"  ,  "지마켓백화점"   ,    "hdepart01"  ,  " " )   // D     // D
+	  	  , AUCDEPART         ( "hdepart01t"  ,  "옥션백화점"     ,    "hdepart01"  ,  " " )   // D     // D
+	  	  , REAL_GMRKDEPART   ( "hdepart01"   ,  "지마켓백화점"   ,    "hdepart01"  ,  " " )   // D     // D
+	  	  , REAL_AUCDEPART    ( "hdepart01"   ,  "옥션백화점"     ,    "hdepart01"  ,  " " )   // D     // D 
+	  	                                                                                 
+	  	  , GMRKHOMESHOP      ( "hhome01t"    ,  "지마켓홈쇼핑"   ,    "hhome01"    ,  " " )   // H     // H
+	  	  , AUCHOMESHOP       ( "hhome01t"    ,  "옥션홈쇼핑"     ,    "hhome01"    ,  " " )   // H     // H
+	  	  , REAL_GMRKHOMESHOP ( "hhome01"     ,  "지마켓홈쇼핑"   ,    "hhome01"    ,  " " )   // H     // H
+	      , REAL_AUCHOMESHOP  ( "hhome01"     ,  "옥션홈쇼핑"     ,    "hhome01"    ,  " " )   // H     // H 
+	  	  
+ 
 	      
+	      ;
+    	
 	    AucGmrkAccount(String sellerId, String sellerNm, String masterId, String secretKey) {
 			this.sellerId 				= sellerId;
 			this.sellerNm 		        = sellerNm;
@@ -181,13 +268,9 @@ public class MainClass {
 			this.secretKey              = secretKey;
 		}
 	    
-		// 제휴몰 코드 
 	    private String sellerId; 
-	    // 제휴몰 명 
 	    private String sellerNm;
-	    // 제휴몰 통합분개전표코드매핑 
 	    private String masterId;
-	    // 제휴몰 통합분개전표코드매핑 
 	    private String secretKey;
 	    
 		public String getSellerId() {

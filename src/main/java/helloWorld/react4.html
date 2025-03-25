@@ -1,0 +1,80 @@
+<!-- 
+	Custom hook 
+	
+	1. 개념
+		코드 들이 반복 되면 ==> 함수로 만들어준다
+		훅들이 반복되면???  ==> Custom Hook 으로 묶어준다~~
+		
+	==> 목표 : 기존 keyword만 바라보던 useEffect 에서
+			   모든 Value 를 바라보는 useEffect 를 만들자! 
+			   
+	React.useEffect(() => { 
+		window.localStorage.setItem("keyword", keyword);
+		window.localStorage.setItem("result", result);
+		window.localStorage.setItem("typing", typing);
+	},[keyword, result, typing]); 
+	
+	==> 이런 형태는 경우의수가 2*2*2 8가지 ==> 원치 않은 Effect 가 발생할수 있다.
+	==> 하나의 value 만 바라보는 useEffect => 코드 중복!
+	=> 커스텀 훅으로 해결!
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+	<body>
+		<div id = "root"> </div>
+		<script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+		<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+		<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+		<script type = "text/babel">
+			
+			const rootElement = document.getElementById("root");
+
+			function localStorageEffect(name, dftValue = "") { // 기본값 설정을 받으면서 기본값설정 ㅋㅋ
+				
+				const [state, setState]   = React.useState(() => {
+					return window.localStorage.getItem(name) || dftValue;  // state 초기값 설정 부분
+				});
+				
+				React.useEffect(() => {
+					window.localStorage.setItem(name, state);  // 이런식으로 같이 쓰는 useEffect 
+				},[state]);  // name 이 아니라 State 봐야행~~
+				
+				return [state, setState];
+			}
+			
+			const App = () => {
+
+				const [keyword, setKeyword] = localStorageEffect("keyword"); // keyword 란 localStorage 를 이용하는 거거
+				const [result, setResult]   = localStorageEffect("result");
+				const [typing, setTyping]   = localStorageEffect("typing", false); // 기본값 가진 커스텀훅
+
+				function handleChange(event) {
+					console.log('handleChange');
+					setKeyword(event.target.value);
+					setTyping(true);
+				}
+				
+				function handleClick(){
+					console.log('handleClick');
+					setResult(`result is ${keyword}`);
+					setTyping(false);
+				} 
+			
+				return (
+					<>
+					 <input onChange={handleChange} value = {keyword}/>					
+					 <button onClick={handleClick}>search</button>
+					 <p>
+						{typing ? `typing is true ::: ${keyword} ` : result}
+					 </p>					
+					</>
+				)
+			};
+			
+			ReactDOM.render(<App />,rootElement);
+				
+		</script>
+	</body>
+</html>
+
