@@ -1,0 +1,72 @@
+<!-- 
+ 
+	form 다루기!
+	
+	react - native Html 태그들을 사용하면 편하게 할수 있다.
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+	<body>
+		<div id = "root"> </div>
+		<script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+		<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+		<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+		<script type = "text/babel">
+			
+			const rootElement = document.getElementById("root");
+	 	
+			const App = () => {
+				
+				const handleSubmit = (event) => {
+					event.preventDefault(); /* 기본 동작은 섭밑 하구 새로고침*/
+					console.log(event);
+					console.log(event.target);
+					console.dir(event.target);
+					console.dir(event.target.elements);
+					alert(`first name : ${event.target[0].value} last name : ${event.target[1].value}`);
+					alert(`first name : ${event.target.elements.fname.value} last name : ${event.target.elements.lname.value}`);
+				};
+				
+				const handleSubmit2 = (event) => {
+					event.preventDefault(); /* 기본 동작은 섭밑 하구 새로고침*/
+					console.log(event);
+					console.log(event.target);
+					console.dir(event.target);
+					console.dir(event.target.elements);
+					alert(`first name : ${event.target.elements.cars.value}  `);
+				};
+				
+				return (
+					/* 1번 input form -- id name 어느게 그거나? */
+					<form  onSubmit={handleSubmit}>
+						<label htmlFor="fname">First name: </label><br/>
+						<input type="text" id="fname" name = "fname" value="John"/><br/>  
+						<label htmlFor="lname">last name: </label><br/>
+						<input type="text" id="lname" name = "lname" value="Smith"/><br/><br/>
+						<input type="submit" value="submit"/>
+					</form>
+					/* 2번 select form 
+					<form  onSubmit={handleSubmit2}>
+						<label htmlFor="cars">Choose car : </label> 
+						<select id="cars" name = "cars">
+						<option value="Hyundai"/>
+						<option value="Samsung"/>
+						<option value="Benz"/>
+						</select>
+						<br/><br/>
+						
+						<input type="submit" value="submit"/>
+					</form> */
+				);
+			};
+			
+			ReactDOM.render(<App />,rootElement);
+				
+		</script>
+	</body>
+</html>
+
+
+
+ 
