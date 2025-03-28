@@ -1,0 +1,113 @@
+<!-- 
+ 
+	form 다루기!
+	
+	react - native Html 태그들을 사용하면 편하게 할수 있다. ==> 기본html 태그를 이용해서 개발하기
+	- validation 주기==> 입력될떄마다.	
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+	<body>
+		<div id = "root"> </div>
+		<script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+		<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+		<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+		<script type = "text/babel">
+			
+			const rootElement = document.getElementById("root");
+	 	
+			const App = () => {
+				
+				const [msg, setMsg] = React.useState("");
+				const [hp,  setHp]  = React.useState("");
+				
+/*				const handleSubmit = (event) => {
+					
+					event.preventDefault(); /* 기본 동작은 섭밑 하구 새로고침* /
+					const phoneNumber = event.target.elements.phone.value;  /*두 군데서 쓰고 있으 뺴자 * /
+					if(phoneNumber.startWith(0)){
+						alert('Good');
+					}else{
+						alert('fuck');
+					}
+				};
+ */				
+ 					
+/*				const handleChange = (event) => {
+ *					const phoneNumber = event.target.value;
+ *					if(phoneNumber.startsWith(0)){
+ *						setMsg('올바른 번호입니다.');
+					}else{
+						setMsg('잘못된 번호입니다.');
+					}
+ *				};
+ */				
+ /*				const handleChange = (event) => {
+	
+					setHp(event.target.value);
+					if(hp.startsWith(0)){           / * ====> 여기서 시간 오차가 발생한다!!!!  * / 
+						setMsg('올바른 번호입니다.');
+					}else{
+						setMsg('잘못된 번호입니다.');
+					}
+				};
+*/				
+	/*			const handleChange = (event) => {
+					const tgtValue = event.target.value;
+					
+					if(tgtValue.startsWith(0)){            ====> 여기서 시간 오차가 발생한다!!!! 
+						setMsg('올바른 번호입니다.');
+					}else{
+						setMsg('잘못된 번호입니다.');
+					}
+					setHp(event.target.value);
+				};
+	*/			
+				const handleChange = (event) => {
+					const tgtValue = event.target.value;
+					
+					if(tgtValue.startsWith(0)){           /* ====> 여기서 시간 오차가 발생한다!!!! */
+						setMsg('올바른 번호입니다.');
+						setHp(event.target.value);
+					}else if(tgtValue.length === 0){
+						setHp('');
+						setMsg('');
+					} else{
+						setMsg('잘못된 번호입니다.');
+					}
+				};
+				
+				const handleSubmit = (event) => {
+					
+					event.preventDefault(); /* 기본 동작은 섭밑 하구 새로고침*/
+					   /*두 군데서 쓰고 있으 뺴자 */
+					if(hp.startWith(0)){
+						alert('Good');
+					}else{
+						alert('fuck');
+					}
+				};
+				
+				return (
+					<form  onSubmit={handleSubmit}>
+						<label htmlFor="phone">핸펀 번호 입력해라 : </label><br/><br/>
+						<input type="text" id="phone" name = "phone" onChange={handleChange} value={hp} />
+						<br/><br/>  
+						<p>{msg}</p>
+						<button type="submit" disabled={hp.length > 0}>submit</button>
+						<br/><br/>  
+						<p>{hp}</p>
+					</form>
+				);
+			};
+			
+			ReactDOM.render(<App />,rootElement);
+				
+		</script>
+	</body>
+</html>
+
+
+
+ 
