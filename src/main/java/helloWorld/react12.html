@@ -1,0 +1,71 @@
+<!-- 
+	KEY 와 value 다루기
+	그전에 문법이 너무 어렵다..
+	
+	1. React.useState(todos) 배열을 useState 로? ? ? 
+	2. setItems( (items) => items.filter((item) => item !== todo) )
+	3. setItems( (items) => [
+						...items,
+						todos.find((item) => !items.includes(item))
+					]);
+	
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+	<body>
+		<div id = "root"> </div>
+		<script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+		<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+		<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+		<script type = "text/babel">
+			
+			const rootElement = document.getElementById("root");
+	 		
+	 		const todos = [
+				{ id : 1, value : "밥먹기" },
+				{ id : 2, value : "놀기" },
+				{ id : 3, value : "씻기" },
+				{ id : 4, value : "잠자기" }
+			];
+			
+			const App = () => {
+				
+				const [items, setItems] = React.useState(todos); 
+				const handleDoneClick = (todo) => {
+					setItems( (items) => items.filter((item) => item !== todo) )
+				};
+				
+				const handleRestore = () => {
+					setItems( (items) => [
+						...items,
+						todos.find((item) => !items.includes(item))
+					]);
+				};
+				/*key 를 넣어줘야 콘솔 warning 이 사라진다.*/
+				return (
+					<>
+						{items.map((todo) => (
+							<div key={todo.id}> 
+								<p>{todo.value}</p>
+								<button onClick= {() => handleDoneClick(todo)}>Done</button>
+							</div>
+						))}
+						
+						<br/>
+						<br/>
+						
+						<button onClick={handleRestore}>Restore</button>
+					</>
+				);
+			};
+			
+			ReactDOM.render(<App />,rootElement);
+				
+		</script>
+	</body>
+</html>
+
+
+
+  
