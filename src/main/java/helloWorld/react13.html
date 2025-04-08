@@ -1,0 +1,115 @@
+<!-- 
+	KEY 와 value 다루기
+	그전에 문법이 너무 어렵다..
+	
+	1. React.useState(todos) 배열을 useState 로? ? ? 
+	2. setItems( (items) => items.filter((item) => item !== todo) )
+	3. setItems( (items) => [
+						...items,
+						todos.find((item) => !items.includes(item))
+					]);
+	
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+	<body>
+		<div id = "root"> </div>
+		<script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+		<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+		<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+		<script type = "text/babel">
+			
+			const rootElement = document.getElementById("root");
+	 		
+	 		const todos = [
+	 			[
+					{ id : 1, value : "밥먹기" },
+					{ id : 2, value : "놀기" },
+					{ id : 3, value : "씻기" },
+					{ id : 4, value : "잠자기" }
+				],
+				[
+					{ id : 4, value : "잠자기" },
+					{ id : 2, value : "놀기" },
+					{ id : 3, value : "씻기" },
+					{ id : 1, value : "밥먹기" }
+				],
+				[
+					{ id : 3, value : "씻기" },
+					{ id : 2, value : "놀기" },
+					{ id : 1, value : "밥먹기" },
+					{ id : 4, value : "잠자기" }
+				],
+				[
+					{ id : 2, value : "놀기" },
+					{ id : 1, value : "밥먹기" },
+					{ id : 3, value : "씻기" },
+					{ id : 4, value : "잠자기" }
+				]
+			];
+			
+			const App = () => {
+				
+				const [items, setItems] = React.useState(todos[0]); 
+				
+				React.useEffect(()=>{
+					const interval = setInterval(()=>{
+						const random = Math.floor(Math.random() * 3);
+						setItems(todos[random]);
+					}, 1000);
+					
+					return () => {
+						clearInterval(interval);
+					};
+					
+				},[]);
+				
+				const handleDoneClick = (todo) => {
+					setItems( (items) => items.filter((item) => item !== todo) )
+				};
+				
+				const handleRestore = () => {
+					setItems( (items) => [
+						...items,
+						todos.find((item) => !items.includes(item))
+					]);
+				};
+				/* key 를 넣지 않았을때 - 컴포넌트가 이동해도 탭 찝은게 안변경된다. 
+					==> 컴포넌트의 이동이 아니라 글자들만 바꼈다!
+				
+				   Key 를 넣으면 - 탭해놓으면 컴포넌트를 따라간다. 
+				   = 좋은 재사용 
+				   = 컴포넌트 위치를 옮겼다.
+				   
+				   key 가 index 라면 ==> 컴포넌트 자체의 유일한게 아니다. => 않넣은거랑똑같다.
+				   
+				   
+				   ==> react 재조정 문서를 봐봐라 KEY 
+					
+				*/
+				return (
+					<>
+						{items.map((todo) => (
+							<div key={todo.id}> 
+								<button onClick= {() => handleDoneClick(todo)}>{todo.value}</button>
+							</div>
+						))}
+						
+						<br/>
+						<br/>
+						
+						<button onClick={handleRestore}>Restore</button>
+					</>
+				);
+			};
+			
+			ReactDOM.render(<App />,rootElement);
+				
+		</script>
+	</body>
+</html>
+
+
+
+  
