@@ -1,4 +1,4 @@
-package helloworld.application.adapter.out.h2db.config;
+package helloworld.common.h2db;
 
 import javax.sql.DataSource;
 
@@ -29,35 +29,27 @@ public class H2dbDataSourceConfig {
     }
     
     @Primary
-    @Bean(name = "h2dbSqlSessionFactory")
-    public SqlSessionFactory readerSqlSessionFactory(
-            @Qualifier("h2dbDataSource") DataSource h2dbDataSource, ApplicationContext applicationContext
-    ) throws Exception {
+	@Bean(name = "h2dbSqlSessionFactory")
+	public SqlSessionFactory readerSqlSessionFactory(@Qualifier("h2dbDataSource") DataSource h2dbDataSource,
+			                                         ApplicationContext applicationContext) throws Exception {
+    	
         SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
-        //sqlSessionFactoryBean.setPlugins(new HShopSqlLogInterceptor(hShopSqlExecutor));
+        //sqlSessionFactoryBean.setPlugins(new SqlLogInterceptor( SqlExecutor));
         sqlSessionFactoryBean.setVfs(SpringBootVFS.class);
         sqlSessionFactoryBean.setDataSource(h2dbDataSource);
-
-        sqlSessionFactoryBean.setMapperLocations(
-                applicationContext.getResources("classpath:mapper/h2db/**/*Mapper.xml")
-        );
-        sqlSessionFactoryBean.setTransactionFactory(null);
-        sqlSessionFactoryBean.setConfigLocation(
-                applicationContext.getResource("classpath:mapper/configuration.xml")
-        );
-
+		sqlSessionFactoryBean.setMapperLocations(applicationContext.getResources("classpath:mapper/h2db/**/*Mapper.xml"));
+		sqlSessionFactoryBean.setTransactionFactory(null);
+		sqlSessionFactoryBean.setConfigLocation(applicationContext.getResource("classpath:mapper/configuration.xml"));
         //sqlSessionFactoryBean.setTypeAliasesPackage("hshop.application.domain.ap");
-        
         return sqlSessionFactoryBean.getObject();
     }
 
-    @Primary
-    @Bean(name = "untdTransactionManager")
-    public PlatformTransactionManager untdTransactionManager(
-            @Qualifier("h2dbDataSource") DataSource h2dbDataSource
-    ) {
-        DataSourceTransactionManager transactionManager = new DataSourceTransactionManager(h2dbDataSource);
-        transactionManager.setGlobalRollbackOnParticipationFailure(false);
-        return transactionManager;
-    }
+	@Primary
+	@Bean(name = "h2dbTransactionManager")
+	public PlatformTransactionManager untdTransactionManager(@Qualifier("h2dbDataSource") DataSource h2dbDataSource) {
+		
+		DataSourceTransactionManager transactionManager = new DataSourceTransactionManager(h2dbDataSource);
+		transactionManager.setGlobalRollbackOnParticipationFailure(false);
+		return transactionManager;
+	}
 }

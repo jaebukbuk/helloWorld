@@ -18,3 +18,26 @@ helloworld:
       username: h2db
       password: h2db!
       maximum-pool-size: 2
+  url:
+    patterns:
+      - /api/**
+      
+springdoc:
+  api-docs:
+    path: /v1/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    operations-sorter: alpha
+    tags-sorter: alpha
+  override-with-generic-response: false
+  
+logging:
+  level:
+    jdbc:
+      audit: OFF
+      resultset: OFF
+      resultsettable: INFO
+      sqlonly: OFF
+      sqltiming: INFO
+      connection: OFF
+    root: INFO     # 모든 패키지의 기본 로그 레벨
