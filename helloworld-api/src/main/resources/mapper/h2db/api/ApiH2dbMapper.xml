@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "../../../mybatis-3-config.dtd">
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "../../../mybatis-3-mapper.dtd">
 
 <mapper namespace="helloworld.application.adapter.out.h2db.api.mapper.ApiH2dbMapper">
 
-	<select id="selectTest" resultType="String">
+	<select id="selectTest" resultType="java.lang.String">
 		select NAME from TEST  
 	</select>
 

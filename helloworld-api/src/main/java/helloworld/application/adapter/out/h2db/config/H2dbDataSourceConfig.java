@@ -2,6 +2,7 @@ package helloworld.application.adapter.out.h2db.config;
 
 import javax.sql.DataSource;
 
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.annotation.MapperScan;
@@ -17,12 +18,12 @@ import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
 
 @Configuration
-@MapperScan(value = "helloworld", sqlSessionFactoryRef = "h2dbSqlSessionFactory")
+@MapperScan(value = "helloworld", annotationClass = Mapper.class, sqlSessionFactoryRef = "h2dbSqlSessionFactory")
 public class H2dbDataSourceConfig {
 	
     @Primary
     @Bean(name = "h2dbDataSource")
-    @ConfigurationProperties(prefix = "spring.datasource.h2db")
+    @ConfigurationProperties(prefix = "helloworld.datasource.h2db")
     public DataSource h2dbDataSource()  {
         return DataSourceBuilder.create().build();
     }
