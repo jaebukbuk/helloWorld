@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+
+<html>
+
+<dbody>
+
+<script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+
+<div id = "root1">
+</div>
+
+<div id = "root2"></div>
+
+<div id = "root3"></div>
+
+<div id = "root4"></div>
+
+<div id = "root5"></div>
+
+<div id = "root6"></div>
+
+<div id = "root7"></div>
+
+<div id = "root8"></div>
+
+<div id = "root9"></div>
+
+<div id = "root10"></div>
+
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script type="text/babel">
+ 
+	const rootEl7 = document.getElementById("root7");
+	const el7 = (<React.Fragment
+		className="box" children={[
+			<h1> HU </h1>,
+			<h2> HU3 </h2>
+		]} />);
+
+	ReactDOM.render(el7, rootEl7);
+
+
+	const rootEl8 = document.getElementById("root8");
+	var el8 =
+		<React.Fragment>
+			{[<h1> HU1 </h1>, <h2> HU3 </h2>]}
+		</React.Fragment>;
+	ReactDOM.render(el8, rootEl8);
+
+	// 태그의 나열 -> React.Fragment -> 화면에 안나오지만 묶어주는!!
+	const rootEl9 = document.getElementById("root9");
+	const el9 =
+		<>
+			<h1> HU10 </h1>
+			<h2> HU3 </h2>
+		</>;
+
+	console.log(el9);
+	ReactDOM.render(el9, rootEl9);		
+	
+	// 엘리멘트 -> 반복해서 출력하기 = 함수화!!
+	const rootEl2 = document.getElementById("root2");
+	const Paint = () => (
+		<>
+			<h1>HHI</h1>
+			<h3>HHHI</h3>	
+		</>	
+	);
+	
+	//1안 jsx 에다가 자바스크립트 주입할때는 {} 중관롸 
+	const paintEl = <>
+		{Paint()}
+		{Paint()}
+		{Paint()}
+	</>;
+	ReactDOM.render(paintEl, rootEl2);
+	
+	//2안 단순 출력이 아닐때!! 더욱 편리
+	const rootEl3 = document.getElementById("root3");
+	const Paint2 = (title, desc) => (
+		<>
+			<h1>{title}</h1>
+			<h3>{desc}</h3>	
+		</>	
+	);
+	const paint2El = <>
+		{Paint2('1번', '1번이지롱')}
+		{Paint2('2번','2번이지롱')}
+		{Paint2('3번','3번이지롱')}
+	</>;
+	ReactDOM.render(paint2El, rootEl3);
+	
+	//  요거랑 2번이랑 같은 표현
+	const Paint22 = (title, desc) => {
+	return	<>
+			<h1>{title}</h1>
+			<h3>{desc}</h3>	
+		</>	
+	};
+	
+	
+	
+	//3안 함수화!
+	const rootEl4 = document.getElementById("root4");
+	const Paint3 = ({title, desc}) => (  //요거 { } 요게 프롭스다. -- 프롭스 이면 children 이랑 classname 받겠지
+		<>
+			<h1>{title}</h1>
+			<h3>{desc}</h3>	
+		</>	
+	);
+	
+	const paint3El = <>
+		<Paint3 title = "11번" desc="11번 이지롱"/>  
+		<Paint3 title = "22번" desc="22번이지롱"/>
+		<Paint3 title = "33번" desc="33번 이지롱"/> 
+	</>;
+	ReactDOM.render(paint3El, rootEl4);
+	
+	
+	const rootEl5 = document.getElementById("root5");
+	const paint3 = ({title, desc}) => (  // 요런걸 커스텀 엘리멘트라고 한다. 대문자인거
+		<>
+			<h1>{title}</h1>
+			<h3>{desc}</h3>	
+		</>	
+	);
+	// 요건 에러 난다.
+	// jsx 기반 커스텀 태그는 기존 html 태그 소문자로 시작하는 키워드랑 겹칠수 있어서 대문자로만 시작해야한다.
+	const paint43El = <>
+			<paint3 title = "11번" desc="11번 이지롱"/>
+			<paint3 title = "22번" desc="22번이지롱"/>
+			<paint3 title = "33번" desc="33번 이지롱"/> 
+		</>;
+		
+		ReactDOM.render(paint43El, rootEl5);
+		
+		
+		//요거 { } 요게 프롭스다. -- 프롭스 이면 children 이랑 classname 받겠지
+		const rootEl6 = document.getElementById("root6");
+		const Paint6 = ({title, desc, children}) => (  
+			<>
+				<h1>{title}</h1>
+				<h3>{desc}</h3>	
+				{children}
+			</>	
+		);
+		// 어 이거 알아먹내 칠드런으로, 리엑트냉
+		const paint6El = <>
+			<Paint6 title = "11번" desc="11번 이지롱"> 하이하이 </Paint6>
+			<Paint6 title = "22번" desc="22번이지롱"> <h3>하이하임ㅁ</h3> </Paint6>
+			<Paint6 title = "33번" desc="33번 이지롱"/> 
+		</>;
+		ReactDOM.render(paint6El, rootEl6);
+</script>
+
+</body>
+
+</html>
